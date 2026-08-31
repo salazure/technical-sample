@@ -81,16 +81,31 @@ def load_data_from_directory(directory_path, specified_dictionary):
 def generate_hash_digest(filename):
     # reference: https://stackoverflow.com/questions/22058048/hashing-a-file-in-python
 
+    # uses hashlib to generate a hash digest via hashing method sha256 (and via opening the file as read binary (rb))
+    # for this technical scenario, no minimum security level has been defined, so sha256 has been used as the hashing method
     with open(filename, 'rb', buffering=0) as file:
         return hashlib.file_digest(file, 'sha256').hexdigest()
 
-def check_directory():
-    global client_data_path, server_data_path
-
 
 def verify_integrity():
-    pass
+    global client_files, server_files
 
+    results = {}
+
+    for server_filename, server_hash in server_files.items():
+        if server_filename in client_files:
+            if server_hash == client_files[server_filename]:
+                results[server_filename] = [True, "VALID"]
+            else:
+                results[server_filename] = [False, "FILE DATA DOES NOT MATCH"]
+        else:
+            results[server_filename] = [False, "NOT ON CLIENT"]
+
+    for client_filename in client_files.keys():
+        if client_filename not in results:
+            results[client_filename] = [False, "NOT ON SERVER"]
+
+    return results
 
 
 if __name__ == "__main__":
@@ -100,5 +115,8 @@ if __name__ == "__main__":
     load_data_from_directory(client_data_path, client_files)
     load_data_from_directory(server_data_path, server_files)
 
-    check_directory()
-    verify_integrity()
+    results = verify_integrity()
+
+    # handle output print
+    # TODO: add nicer looking print function
+    print(results)
