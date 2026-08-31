@@ -1,0 +1,104 @@
+'''
+
+----- OVERVIEW -----
+The following section of code has been developed as per the "Integrity" core requirements of the technical scenario assessment.
+
+Please note, this is one variant of the code. A C++ and C# variant has been provided in this repository as well.
+
+Prior to testing this code, please review the README.md and ensure the /client_data/ and /server_data/ directories exist and possess data.
+
+If you wish to confirm this code is operational across different directories, change the "client_side" and "server_side" tags in the "config.json" file (within the code directory).
+
+
+----- ASSUMPTIONS -----
+This code segment is to resemble only a section of a larger program and architectural environment.
+
+This segment takes on the role of a 'reciever', whereby it verifies the files it possesses match the files on the client machine.
+
+It assumes these files have already been transferred, with the files existing in two locations: client_data and server_data.
+
+This code also assumes config.json will not move location.
+
+After confirming integrity (or noting down disrepancies), this code will return its results.
+
+
+----- PROCESS ------
+
+
+
+'''
+
+import json
+from pathlib import Path
+import hashlib
+
+# const holding configuration file name
+CONFIG_FILENAME = "config.json"
+
+# global directory paths
+client_data_path = ""
+server_data_path = ""
+
+# global dictionaries to compare files
+# format: {"file1.txt": "[hash digest]"}
+client_files = {}
+server_files = {}
+
+
+# initialise loads the directory paths from the config.json file
+def initialise():
+    global client_data_path, server_data_path
+
+    # get directory where config file exists
+    directory = Path(__file__).resolve().parent.parent
+
+    try:
+        # open JSON file and set global paths
+        with open(directory / CONFIG_FILENAME, "r") as file:
+            raw_data = json.load(file)
+            client_data_path = directory.parent / raw_data["client_directory"]
+            server_data_path = directory.parent / raw_data["server_directory"]
+    except FileNotFoundError:
+        # if file not found, print error
+        print("Could not open file. Please check config.json values match desired directory.")
+    else:
+        print("Client and server directories located successfully.")
+
+# loads a list of files from a specified directory and generates rows of a dictionary
+def load_data_from_directory(directory_path, specified_dictionary):
+    directory = Path(directory_path)
+    print(f"Loaded directory path: {directory}")
+    for item in directory.iterdir():
+        print(f"File found: {item.name}")
+        print(item)
+
+        hash_digest = generate_hash_digest(item)
+        specified_dictionary[item.name] = hash_digest
+
+    print(specified_dictionary)
+
+# generates and returns a hash digest for a specified file
+def generate_hash_digest(filename):
+    # reference: https://stackoverflow.com/questions/22058048/hashing-a-file-in-python
+
+    with open(filename, 'rb', buffering=0) as file:
+        return hashlib.file_digest(file, 'sha256').hexdigest()
+
+def check_directory():
+    global client_data_path, server_data_path
+
+
+def verify_integrity():
+    pass
+
+
+
+if __name__ == "__main__":
+    initialise()
+
+    # load data from client and server
+    load_data_from_directory(client_data_path, client_files)
+    load_data_from_directory(server_data_path, server_files)
+
+    check_directory()
+    verify_integrity()
