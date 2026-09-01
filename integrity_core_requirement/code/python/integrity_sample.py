@@ -11,7 +11,7 @@ If you wish to confirm this code is operational across different directories, ch
 ----- ASSUMPTIONS -----
 This code segment is to resemble only a section of a larger program and architectural environment.
 
-This segment takes on the role of a 'reciever', whereby it verifies the files it possesses match the files on the client machine.
+This segment takes on the role of a 'receiver', whereby it verifies the files it possesses match the files on the client machine.
 
 It assumes these files have already been transferred, with the files existing in two locations: client_data and server_data.
 
