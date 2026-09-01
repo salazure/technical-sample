@@ -20,3 +20,5 @@ As such, utilising hashing and comparing hash digests is an efficient and approp
 In the context of the code demonstration, I have used a SHA256 hash digest comparison. Other hashing methods can be used (such as the MD5 hashing algorithm), however I chose to use SHA256 as this method is widely used and secure.
 
 As such, ultimately I chose to explore the Integrity core requirement via this code demonstration.
+
+Python was chosen as my programming language for this demonstration because of its pre-existing libraries for hash generation and readability.
